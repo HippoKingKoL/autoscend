@@ -1031,7 +1031,6 @@ void initializeDay(int day)
 			string[int] teaChoice = split_string(get_property("auto_teaChoice"), ";");
 			string myTea = trim(teaChoice[min(count(teaChoice), my_daycount()) - 1]);
 			if (myTea.to_item() != $item[none] || myTea == "shake")
-			if(myTea != $item[none])
 			{
 				boolean buff = cli_execute("teatree " + myTea);
 			}
