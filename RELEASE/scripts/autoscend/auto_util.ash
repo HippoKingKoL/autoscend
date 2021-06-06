@@ -1312,6 +1312,10 @@ string yellowRayCombatString(monster target, boolean inCombat, boolean noForceDr
 			return auto_combatSaberYR();
 		}
 	}
+	
+	if(auto_have_skill($skill[Shocking Lick])) {
+		return "skill "+$skill[Shocking Lick];
+	}
 
 	return "";
 }

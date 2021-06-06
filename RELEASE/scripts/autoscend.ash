@@ -1217,6 +1217,12 @@ void initializeDay(int day)
 
 			auto_beachCombHead("exp");
 		}
+		
+		// Use a 9-volt battery if it's available on day 1, to get a Shocking Lick charge.
+		if (item_amount($item[Battery (AAA)]) > 3 || item_amount($item[Battery (9-Volt)]) > 0)
+		{
+			use(1,$item[Battery (9-Volt)]);
+		}
 
 		if((get_property("lastCouncilVisit").to_int() < my_level()) && (auto_my_path() != "Community Service"))
 		{
@@ -1305,6 +1311,11 @@ void initializeDay(int day)
 	if(day >= 2)
 	{
 		ovenHandle();
+		// After day 1, we only want to use a 9-volt battery for lick if we still have enough left over for a car battery for items/meat.
+		if (auto_totalBatteries()>9)
+		{
+			use(1,$item[Battery (9-Volt)]);
+		}
 	}
 
 	string campground = visit_url("campground.php");

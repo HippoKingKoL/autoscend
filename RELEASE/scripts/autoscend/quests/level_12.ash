@@ -1550,6 +1550,10 @@ boolean L12_themtharHills()
 	buffMaintain($effect[Human-Fish Hybrid], 0, 1, 1);
 	buffMaintain($effect[Cranberry Cordiality], 0, 1, 1);
 	buffMaintain($effect[Patent Avarice], 0, 1, 1);
+	buffMaintain($effect[Car-Charged], 0, 1, 1);
+	buffMaintain($effect[Heart of Pink], 0, 1, 1);
+	buffMaintain($effect[Sweet Heart], 0, 1, 20);
+		
 	if(item_amount($item[body spradium]) > 0 && !in_tcrs() && have_effect($effect[Boxing Day Glow]) == 0)
 	{
 		autoChew(1, $item[body spradium]);
@@ -1656,6 +1660,9 @@ boolean L12_themtharHills()
 	buffMaintain($effect[Human-Humanoid Hybrid], 0, 1, 1);
 	buffMaintain($effect[Human-Fish Hybrid], 0, 1, 1);
 	buffMaintain($effect[Cranberry Cordiality], 0, 1, 1);
+	buffMaintain($effect[Car-Charged], 0, 1, 1);
+	buffMaintain($effect[Heart of Pink], 0, 1, 1);
+	buffMaintain($effect[Sweet Heart], 0, 1, 20);
 	bat_formWolf();
 	zataraSeaside("meat");
 

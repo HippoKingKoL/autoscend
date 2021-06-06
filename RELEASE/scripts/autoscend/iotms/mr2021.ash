@@ -112,3 +112,14 @@ int auto_backupUsesLeft()
 {
 	return 11 + (my_path() == "You, Robot" ? 5 : 0) - get_property("_backUpUses").to_int();
 }
+
+int auto_totalBatteries()
+{
+	int total_batteries = item_amount($item[Battery (AAA)]);
+	total_batteries += 2* item_amount($item[Battery (AA)]);
+	total_batteries += 3* item_amount($item[Battery (D)]);
+	total_batteries += 4* item_amount($item[Battery (9-Volt)]);
+	total_batteries += 5* item_amount($item[Battery (lantern)]);
+	total_batteries += 6* item_amount($item[Battery (car)]);
+	return total_batteries;
+}
