@@ -639,6 +639,23 @@ boolean L12_getOutfit()
 		return autoAdv($location[Hippy Camp]);
 	}
 	
+	// If we don't have the precursor outfit, and can yellow ray, summon the relevant monster
+	if(adjustForYellowRayIfPossible($monster[War Frat Mobile Grill Unit]))
+	{
+		if(auto_warSide() == "fratboy")
+		{
+			summonMonster($monster[War Frat Mobile Grill Unit]);
+		}
+		if(auto_warSide() == "hippy")
+		{
+			summonMonster($monster[Bailey\'s Beetle]);
+		}
+		if(haveWarOutfit())
+		{
+			return true;
+		}
+	}//canyellow
+	
 	if(L12_preOutfit())
 	{
 		return true;
@@ -1218,23 +1235,28 @@ boolean L12_sonofaBeach()
 		pulverizeThing($item[Goatskin Umbrella]);
 	}
 
-	if(!in_lar())
-	{
-		float combat_bonus = providePlusCombat(25, $location[Sonofa Beach], true, true);
-		if(combat_bonus <= 0.0)
-		{
-			auto_log_warning("Something is keeping us from getting a suitable combat rate for [Lobsterfrogmen] in [Sonofa Beach]. we have: " +combat_bonus, "red");
-			resetState();
-			return false;
-		}
-	}
-
 	if(item_amount($item[barrel of gunpowder]) < 4)
 	{
 		set_property("auto_doCombatCopy", "yes");
 	}
+	
+	// Summon an LFM if we can (should check if we *can* copy here?)
+	boolean retval = summonMonster($monster[Lobsterfrogman]);
+	
+	if (!retval) {
+		if(!in_lar())
+		{
+			float combat_bonus = providePlusCombat(25, $location[Sonofa Beach], true, true);
+			if(combat_bonus <= 0.0)
+			{
+				auto_log_warning("Something is keeping us from getting a suitable combat rate for [Lobsterfrogmen] in [Sonofa Beach]. we have: " +combat_bonus, "red");
+				resetState();
+				return false;
+			}
+		}
 
-	boolean retval = autoAdv($location[Sonofa Beach]);
+		retval = autoAdv($location[Sonofa Beach]);
+	}
 	
 	set_property("auto_doCombatCopy", "no");
 	edAcquireHP();

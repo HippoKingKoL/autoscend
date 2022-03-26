@@ -1264,6 +1264,7 @@ boolean L11_aridDesert()
 	return true;
 }
 
+// DELETE?
 boolean L11_wishForBaaBaaBuran()
 {
 	if (!canGenieCombat() )
@@ -1309,6 +1310,13 @@ boolean L11_unlockHiddenCity()
 	auto_log_info("Searching for the Hidden City", "blue");
 	if (!in_glover() && !in_tcrs()) 
 	{
+		// I think we prefer a summon to a clover here, so I'm putting it first
+		if (item_amount($item[Stone Wool]) == 0 && have_effect($effect[Stone-Faced]) == 0) {
+			if (summonMonster($monster[Baa\'baa\'bu\'ran]))
+			{
+				return true;
+			}
+		}
 		if (item_amount($item[Stone Wool]) == 0 && have_effect($effect[Stone-Faced]) == 0 && cloversAvailable() > 0) 
 		{
 			//use clover to get 2x Stone Wool

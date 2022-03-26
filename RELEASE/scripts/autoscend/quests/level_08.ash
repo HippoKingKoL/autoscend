@@ -335,12 +335,22 @@ boolean L8_getMineOres()
 		// do not return false if failed to pull despite having enough pulls left. It suggests there is some other issue preventing us from pulling so we should go forwards and acquire them.
 	}
 	
-	// use 1 wish if we can guarentee it will be enough via cat burglar
-	if(canGenieCombat() && auto_shouldUseWishes() && catBurglarHeistsLeft() > 1)
+	// If we can guarantee the drops, we should just go ahead and summon a mountain man to get those.
+	if(adjustForYellowRayIfPossible($monster[mountain man]))
 	{
-		auto_log_info("Trying to wish for a mountain man, which the cat will then burgle, hopefully.");
+		handleFamiliar("item");
+		if(summonMonster($monster[mountain man]))
+		{
+			return true;
+		}
+	}
+	else if (catBurglarHeistsLeft() > 1) {
+		auto_log_info("Trying to summon and catburgle.");
 		handleFamiliar($familiar[cat burglar]);
-		return makeGenieCombat($monster[mountain man]);
+		if(summonMonster($monster[mountain man]))
+		{
+			return true;
+		}
 	}
 	
 	// try to clover for the ore
@@ -638,13 +648,20 @@ boolean L8_trapperNinjaLair()
 	}
 	// we must use two variables because there are too many special cases. maybe we can survive assassins but not encounter them due to +combat being too low. Copiers and pulls complicate matters. We could copy an assassin even if we cannot encounter it in the lair
 	
-	if(isActuallyEd())
+	//check if we can survive a hit or get the jump on NSA
+	if((my_maxhp() <= expected_damage($monster[ninja snowman assassin])) && jump_chance($monster[ninja snowman assassin]) < 100 )
 	{
-		// we lack a function to determine if we will get instagibbed by assassins.
-		// if we had one ed could benefit from doing the slope when he does not get instagibbed by the assassins
-		auto_log_info("Ed assumed to not be able to survive ninja assassins", "blue");
-		set_property("auto_L8_ninjaAssassinFail", true); // we assume ed cannot defeat assassins
-		return true;
+		if(isAboutToPowerlevel())
+		{
+			//if we can't survive and we are powerleveling, do extreme path
+			set_property("auto_L8_ninjaAssassinFail", true);
+			return true;
+		}
+		else
+		{
+			auto_log_warning("Can't survive against ninja snowman assassin. Will delay and try again later", "red"); 
+			return false;
+		}
 	}
 
 	if(get_property("_sourceTerminalDigitizeMonster") == $monster[Ninja Snowman Assassin])
@@ -669,6 +686,18 @@ boolean L8_trapperNinjaLair()
 		return false;
 	}
 
+	// buff
+	if(isActuallyEd() && !elementalPlanes_access($element[spooky]))
+	{
+		adjustEdHat("myst");
+	}
+	
+	// Summon the NSA if possible
+	if(summonMonster($monster[ninja snowman assassin]))
+	{
+		return true;
+	}
+
 	// can we provide enough combat bonus to encounter snowman assassins?
 	if(providePlusCombat(25, $location[Lair of the Ninja Snowmen], true, true) <= 0.0) // ninja snowman does not show up if +combat is not greater than 0
 	{
@@ -683,12 +712,6 @@ boolean L8_trapperNinjaLair()
 			auto_log_warning("Something is keeping us from getting a suitable combat rate for ninja snowman assassin. we can only reach: " + numeric_modifier("Combat Rate") + ". Will delay and try again later", "red");
 		}
 		return false;
-	}
-	
-	// buff
-	if(isActuallyEd() && !elementalPlanes_access($element[spooky]))
-	{
-		adjustEdHat("myst");
 	}
 	
 	if(autoAdv($location[Lair of the Ninja Snowmen]))
